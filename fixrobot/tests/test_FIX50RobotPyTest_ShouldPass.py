@@ -8,6 +8,12 @@ __license__ = "1.1"
 __version__ = "License: GGPLv3+ GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>."
 __credits__ = "Anand P. Subramanian"
 __URL__ = "https://github.com/quickfixrobot/FIXRobot/"
+
+# Modified 26 September 2026 by Vladimir Filipescu (co-authored with Claude Opus 5.5).
+# Fork: https://github.com/extend-it/python-fixrobot
+# Changes:
+#   - duplicate test_NewOrderSingleFilled_AsNames_ShouldPass removed
+
 import sys
 import os
 import time
@@ -108,57 +114,6 @@ class Test_Class:
         if returnMessageInitiator:
             assert returnMessageInitiator.getHeader().getField(35) == "8"
         time.sleep(1)
-        returnValue = self.exch.logDumpMessageStore()
-        assert returnValue == True
-        time.sleep(1)
-
-    #Positive testcase for NewOrderSingle and CancelRequest where fix message arguments are passed as template names.
-    @pytest.mark.fix50positive
-    def test_NewOrderSingleFilled_AsNames_ShouldPass(self, setUpFIX50ClientAndExchange):
-        clientAndExchange = setUpFIX50ClientAndExchange
-        self.exch = clientAndExchange[0]
-        self.client = clientAndExchange[1]
-
-        returnValue = self.exch.clearMessageStore()
-        assert returnValue == True
-        time.sleep(1)
-
-        returnValue = self.client.clearMessageStore()
-        assert returnValue == True
-        time.sleep(1)
-
-        returnMessageInitiator = self.client.sendMessage("NewOrderSinglePass")
-        if returnMessageInitiator:
-            assert returnMessageInitiator.getHeader().getField(35) == "D"
-        time.sleep(1)
-
-        returnMessageAcceptor = self.exch.receiveMessage("NewOrderSinglePass")
-        if returnMessageAcceptor:
-            assert returnMessageAcceptor.getHeader().getField(35) == "D"
-        time.sleep(1)
-
-        returnMessageAcceptor = self.exch.sendMessage("ExecutionReportAckPass")
-        if returnMessageAcceptor:
-            assert returnMessageAcceptor.getHeader().getField(35) == "8"
-        time.sleep(1)
-        returnMessageInitiator = self.client.receiveMessage(
-            "ExecutionReportAckPass")
-        if returnMessageInitiator:
-            assert returnMessageInitiator.getHeader().getField(35) == "8"
-        time.sleep(1)
-
-        returnMessageAcceptor = self.exch.sendMessage(
-            "ExecutionReportFillPass")
-        if returnMessageAcceptor:
-            assert returnMessageAcceptor.getHeader().getField(35) == "8"
-        time.sleep(1)
-
-        returnMessageInitiator = self.client.receiveMessage(
-            "ExecutionReportFillPass")
-        if returnMessageInitiator:
-            assert returnMessageInitiator.getHeader().getField(35) == "8"
-        time.sleep(1)
-
         returnValue = self.exch.logDumpMessageStore()
         assert returnValue == True
         time.sleep(1)
